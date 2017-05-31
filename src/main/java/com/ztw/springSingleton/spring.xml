@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+					    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+					    http://www.springframework.org/schema/tx 
+					    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+					    http://www.springframework.org/schema/jee 
+					    http://www.springframework.org/schema/jee/spring-jee-3.0.xsd 
+					    http://www.springframework.org/schema/context 
+					    http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+	default-lazy-init="true">
+	
+	<context:component-scan base-package="com.ztw.springSingleton" />
+	
+	<bean id="singletonBean" class="com.ztw.springSingleton.SingletonBean">
+		<property name="lastOperateBy">
+			<null />
+		</property>
+	</bean>
+	
+	<bean id="singletonTest001" class="com.ztw.springSingleton.SingletonTest001">
+		<property name="beanName" value="test001" />
+		<property name="singletonBean" ref="singletonBean" />
+	</bean>
+	
+	<bean id="singletonTest002" class="com.ztw.springSingleton.SingletonTest002">
+		<property name="beanName" value="test002" />
+		<property name="singletonBean" ref="singletonBean" />
+	</bean>
+	
+	<bean class="com.ztw.springSingleton.ApplicationUtil" />
+	
+	
+</beans>

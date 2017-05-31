@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+					    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+					    http://www.springframework.org/schema/tx 
+					    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+					    http://www.springframework.org/schema/jee 
+					    http://www.springframework.org/schema/jee/spring-jee-3.0.xsd 
+					    http://www.springframework.org/schema/context 
+					    http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+	default-lazy-init="true">
+	
+	
+	<!-- 数据库连接池公共配置 -->
+	<bean id="commonDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="initialSize" value="${jdbc.initialSize}" /> 
+		<property name="minIdle" value="${jdbc.minIdle}" />  
+		<property name="maxActive" value="${jdbc.maxActive}" /> 
+		<property name="maxWait" value="${jdbc.maxWait}" /> 
+		<property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}" /> 
+		<property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}" /> 
+		<property name="validationQuery" value="${jdbc.validationQuery}" /> 
+		<property name="testWhileIdle" value="${jdbc.testWhileIdle}" /> 
+		<property name="testOnBorrow" value="${jdbc.testOnBorrow}" /> 
+		<property name="testOnReturn" value="${jdbc.testOnReturn}" /> 
+		<property name="poolPreparedStatements" value="${jdbc.poolPreparedStatements}" /> 
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="${jdbc.maxPoolPreparedStatementPerConnectionSize}" /> 
+		<property name="filters" value="${jdbc.filters}" />  
+	</bean>
+	
+	
+	<!-- 主数据库配置 -->
+	<bean id="masterDataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+		<property name="targetDataSource">
+			<bean parent="commonDataSource">
+				<property name="url" value="${master.jdbc.url}" />
+				<property name="username" value="${master.jdbc.username}" />
+				<property name="password" value="${master.jdbc.password}" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="master_sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="masterDataSource" />
+		<!-- 自动扫描mapping.xml文件 -->
+		<property name="mapperLocations" value="classpath:/com/ztw/springJTA/dao/master/*.xml"></property>
+		<!-- 给映射的类配置别名 -->
+		<property name="typeAliasesPackage" value="com.ztw.springJTA.entity.master"></property>
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.ztw.springJTA.dao.master" />
+		<property name="sqlSessionFactoryBeanName" value="master_sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="masterTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="masterDataSource" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="masterTransactionManager" />
+	
+	
+	<!-- 从库01配置 -->
+	<bean id="slave01DataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+		<property name="targetDataSource">
+			<bean parent="commonDataSource">
+				<property name="url" value="${slave01.jdbc.url}" />
+				<property name="username" value="${slave01.jdbc.username}" />
+				<property name="password" value="${slave01.jdbc.password}" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="slave01_sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="slave01DataSource" />
+		<!-- 自动扫描mapping.xml文件 -->
+		<property name="mapperLocations" value="classpath:/com/ztw/springJTA/dao/slave01/*.xml"></property>
+		<!-- 给映射的类配置别名 -->
+		<property name="typeAliasesPackage" value="com.ztw.springJTA.entity.slave01"></property>
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.ztw.springJTA.dao.slave01" />
+		<property name="sqlSessionFactoryBeanName" value="slave01_sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="slave01TransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="slave01DataSource" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="slave01TransactionManager" />
+	
+	
+</beans>

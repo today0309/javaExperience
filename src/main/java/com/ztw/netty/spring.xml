@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+					    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+					    http://www.springframework.org/schema/tx 
+					    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+					    http://www.springframework.org/schema/jee 
+					    http://www.springframework.org/schema/jee/spring-jee-3.0.xsd 
+					    http://www.springframework.org/schema/util 
+					    http://www.springframework.org/schema/util/spring-util-3.2.xsd
+					    http://www.springframework.org/schema/context 
+					    http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+	<context:component-scan base-package="com.ztw.netty" />
+	
+	<bean id="tcpServer" class= "com.ztw.netty.NettyTCPServer" destroy-method="stopServer">
+	        <constructor-arg ref="tcpConfig" />
+	        <constructor-arg ref="myChannelInitializer" />
+	</bean>
+
+	<bean id="myChannelInitializer" class="com.ztw.netty.MyChannelInitializer" />
+
+	<!-- 用于持有ApplicationContext,可以使用SpringContextHolder.getBean('xxxx')的静态方法得到spring bean对象 -->  
+	<bean class="com.ztw.netty.SpringContextHolder" lazy-init="false" />  
+
+	<bean id="tcpConfig" class="com.ztw.netty.NettyConfig">
+	        <property name="channelOptions" ref="tcpChannelOptions"/>
+	        <property name="bossGroup" ref="bossGroup"/>
+	        <property name="workerGroup" ref="workerGroup"/>
+	        <property name="portNumber" value="10086"/>
+	</bean>
+
+	<util:map id="tcpChannelOptions" map-class="java.util.HashMap">
+	        <entry>
+	            <key><util:constant static-field="io.netty.channel.ChannelOption.SO_KEEPALIVE"/></key>
+	            <value type="java.lang.Boolean">true</value>
+	        </entry>
+	        <entry>
+	            <key><util:constant static-field="io.netty.channel.ChannelOption.SO_BACKLOG"/></key>
+	            <value type="java.lang.Integer">100</value>
+	        </entry>
+	</util:map>
+	
+	<bean id="bossGroup" class="io.netty.channel.nio.NioEventLoopGroup" destroy-method="shutdownGracefully">
+	        <constructor-arg type="int" index="0" value="2" />
+	        <constructor-arg index="1" ref="bossThreadFactory" />
+	</bean>
+	
+	<bean id="workerGroup" class="io.netty.channel.nio.NioEventLoopGroup" destroy-method="shutdownGracefully">
+	        <constructor-arg type="int" index="0"
+	            value="8" />
+	        <constructor-arg index="1" ref="workerThreadFactory" />
+	</bean>
+	
+	<bean id="bossThreadFactory" class="com.ztw.netty.NamedThreadFactory">
+	        <constructor-arg type="java.lang.String" value="Server-Boss" />
+	</bean>
+	
+	<bean id="workerThreadFactory" class="com.ztw.netty.NamedThreadFactory">
+	        <constructor-arg type="java.lang.String" index="0" value="Server-Worker" />
+	</bean>
+
+
+</beans>

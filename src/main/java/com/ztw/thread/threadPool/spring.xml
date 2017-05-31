@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+					    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+					    http://www.springframework.org/schema/tx 
+					    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+					    http://www.springframework.org/schema/jee 
+					    http://www.springframework.org/schema/jee/spring-jee-3.0.xsd 
+					    http://www.springframework.org/schema/context 
+					    http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+	default-lazy-init="true">
+	
+	<context:component-scan base-package="com.ztw.thread.threadPool" use-default-filters="false" annotation-config="true">
+		<context:include-filter type="regex" expression=".*Stub.*Repository" />
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Component" />
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository" />
+	</context:component-scan>
+	
+	<!-- 引入配置文件 -->
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:com/ztw/thread/threadPool/jdbc.properties" />
+	</bean>
+	
+	
+	<!-- 用于持有ApplicationContext,可以使用SpringContextHolder.getBean('xxxx')的静态方法得到spring bean对象 --> 
+	<bean class="com.ztw.thread.threadPool.ApplicationUtil" lazy-init="false" />
+
+	<!-- spring整合mybatis -->
+	<import resource="classpath:com/ztw/thread/threadPool/spring-mybatis.xml" />
+	
+	<import resource="classpath:com/ztw/thread/threadPool/spring-redis.xml" />
+	
+	
+</beans>

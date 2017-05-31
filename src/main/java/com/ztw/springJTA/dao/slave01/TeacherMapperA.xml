@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ztw.springJTA.dao.slave01.TeacherMapperA">
+
+
+	<select id="getNameByID" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select name from teacher where id = #{teacherID,jdbcType=INTEGER}
+	</select>
+	
+	<select id="updateTeacher">
+		update teacher set name = #{teacherName,jdbcType=VARCHAR} where id = #{teacherID,jdbcType=INTEGER}
+	</select>
+
+
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ztw.thread.threadPool.mapper.FundMapper">
+
+
+	<!-- 获取所有货币基金的InnerCode -->
+	<select id="getAllMoneyFund" resultType="java.lang.Integer">
+		SELECT DISTINCT(InnerCode) FROM MF_FundArchivesAttach WHERE TypeCode = 10 AND DataCode = 1109 AND InnerCode IS NOT NULL
+	</select>
+	
+	<!-- 根据InnerCode获取LatestWeeklyYield的平均值 -->
+	<select id="getAvgLatestWeeklyYieldByInnerCode" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		SELECT AVG(LatestWeeklyYield) AS AVG_VALUE FROM MF_NetValue WHERE InnerCode = #{innerCode,jdbcType=INTEGER}
+	</select>
+	
+	
+</mapper>
