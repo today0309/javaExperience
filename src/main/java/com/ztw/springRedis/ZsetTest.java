@@ -65,10 +65,10 @@ public class ZsetTest extends BaseConnect {
 	 */
 	@Test
 	public void test001(){
-		List<NewsInfo> list01 = queryByPage(30, 10);
+		List<NewsInfo> list01 = queryByPage(2, 10);
 		System.out.println(list01);
-		List<NewsInfo> list02 = queryByDate("2017-05-01", "2017-05-31");
-		System.out.println(list02);
+		//List<NewsInfo> list02 = queryByDate("2017-05-01", "2017-05-31");
+		//System.out.println(list02);
 	}
 	
 	
