@@ -14,6 +14,18 @@ public class TimeUtilTest {
 	
 	private static String LONG_DATE_PATTERN_LINE = "yyyy-MM-dd HH:mm:ss";
 	
+	@Test
+	public void test006(){
+		String str = "20160205";
+		LocalDate localDate = LocalDate.parse(str, DateTimeFormatter.BASIC_ISO_DATE);
+		String newStr = DateTimeFormatter.ISO_LOCAL_DATE.format(localDate);
+		System.out.println(newStr);
+		String oldStr = "20170909009";
+		oldStr = oldStr.length() > 8 ? oldStr.substring(0, 8) : oldStr;
+		System.out.println(oldStr);
+	}
+	
+	
 	
 	/**
 	 * String转日期

@@ -42,4 +42,30 @@ public class BigDecimalTest {
 		System.out.println(num1.add(num2));
 	}
 	
+	@Test
+	public void test(){
+		System.out.println(0.06+0.01);
+	}
+	
+	@Test
+	public void bigDecimalTest(){
+		double d1 = 12.98732908;
+		double d2 = 0.987123123;
+		
+		System.out.println(BigDecimal.valueOf(d1));// 12.98732908
+		System.out.println(new BigDecimal(12.0));// 12
+		System.out.println(new BigDecimal(12.98732908));
+		// 12.9873290800000003031300366274081170558929443359375
+		System.out.println(new BigDecimal("12.98732908"));// 12.98732908
+		
+		BigDecimal b1 = BigDecimal.valueOf(d1);
+		BigDecimal b2 = BigDecimal.valueOf(d2);
+		
+		System.out.println(b1.add(b2));//加法
+		System.out.println(b1.subtract(b2));//减法
+		System.out.println(b1.multiply(b2));//乘法
+		System.out.println(b1.divide(b2, 4, BigDecimal.ROUND_HALF_UP));//除法，四舍五入保留4位小数
+	}
+
+	
 }
