@@ -78,5 +78,21 @@ public class ArrayListTest {
 			System.out.println(e);
 		}
 	}
+	
+	
+	@Test
+	public void test004(){
+		List<String> list = new ArrayList<>();
+		int i = 0;
+		while(i < 10){
+			list.add(i + "a");
+			i++;
+		}
+		System.out.println(list);
+		list.remove(3);
+		System.out.println(list);
+		list.remove("6a");
+		System.out.println(list);
+	}
 
 }

@@ -23,6 +23,14 @@ public class ZsetTest extends BaseConnect {
 	
 	private static final String NewsInfo_Redis_Key = "newsInfo"; 
 	
+	@Test
+	public void test010(){
+		stringRedisTemplate.opsForHash().put("testkey", "hashKey", "value");
+		stringRedisTemplate.opsForHash().put("testkey", "hashKey", "value");
+		stringRedisTemplate.opsForHash().put("testkey", "hashKey", "value");
+		stringRedisTemplate.opsForHash().put("testkey", "hashKey", "value");
+	}
+	
 	
 	@Test
 	public void test(){
